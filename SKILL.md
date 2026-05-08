@@ -35,6 +35,8 @@ python .\scripts\away_session.py --mode tailscale --port 8765
 
 The helper uses `tailscale ip -4` to find the desktop's stable Tailscale IPv4 address, prepares the token, starts the bridge, and prints a phone URL that should keep working over cellular data as long as both devices remain online in Tailscale.
 
+After starting the bridge, remind the user to set an inbox-check interval and duration. Starting the bridge only lets the phone submit commands; the current Codex App thread still needs manual checks or a heartbeat to read them.
+
 Use `--reset-token` when starting a new trip or when the old phone URL may have been exposed:
 
 ```powershell
@@ -50,7 +52,7 @@ Prefer manual checks or heartbeat checks when the user's goal is to remotely con
 Use heartbeat checks for remote work sessions:
 
 ```text
-Every 30 minutes for the next 4 hours, use $remote-codex-control to check the mobile command inbox once. If there is a pending command, execute it in this current Codex App thread, respond normally in the desktop thread, and mark it done or skipped with a concise phone-visible result note.
+Every 15 minutes for the next 4 hours, use $remote-codex-control to check the mobile command inbox once. If there is a pending command, execute it in this current Codex App thread, respond normally in the desktop thread, and mark it done or skipped with a concise phone-visible result note.
 ```
 
 Use manual checks when the user is at the desktop or wants one explicit check:
@@ -170,7 +172,7 @@ Observed local baseline: in one ChatGPT Plus test on 2026-05-08, five one-minute
 Use this policy:
 
 - If the user gives an interval, use it.
-- If the user asks generally for auto-checking but gives no interval, recommend 30 minutes.
+- If the user asks generally for auto-checking but gives no interval, recommend 15 minutes and ask for a duration.
 - If the user asks for 15 minutes or less, briefly mention that this increases token use.
 - Prefer a bounded duration such as "for the next 4 hours" or "until I come back".
 - Avoid creating an indefinite high-frequency heartbeat unless the user explicitly asks for it.
@@ -179,14 +181,14 @@ Use this policy:
 Useful presets:
 
 - Low cost: every 60 minutes.
-- Balanced: every 30 minutes.
-- Responsive: every 15 minutes.
+- Balanced default: every 15 minutes.
+- Lower cost: every 30 minutes.
 - Urgent: every 5 or 10 minutes, only for short periods.
 
 Example automation request:
 
 ```text
-Every 30 minutes for the next 4 hours, use $remote-codex-control to check the mobile command inbox once. If there is a pending command, treat it as the user's latest instruction, execute it in this current Codex App thread if it is safe and clear, produce the normal desktop Codex response, then mark it done or skipped with a concise phone-visible result note. If there is no pending command, say so briefly.
+Every 15 minutes for the next 4 hours, use $remote-codex-control to check the mobile command inbox once. If there is a pending command, treat it as the user's latest instruction, execute it in this current Codex App thread if it is safe and clear, produce the normal desktop Codex response, then mark it done or skipped with a concise phone-visible result note. If there is no pending command, say so briefly.
 ```
 
 Do not create a public long-running tunnel without the user's explicit approval.

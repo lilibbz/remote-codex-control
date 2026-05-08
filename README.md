@@ -82,6 +82,8 @@ Open that full URL on your phone while Tailscale is connected.
 
 Keep the PowerShell window open. Press `Ctrl+C` when you want to stop remote access.
 
+Important: starting the bridge only lets the phone submit commands. To have the current Codex App thread read those commands, set a manual check or a heartbeat interval. The recommended default is every 15 minutes with a clear duration.
+
 ## Send A Test Command
 
 On the phone page, enter:
@@ -103,7 +105,7 @@ Use $remote-codex-control to check the mobile command inbox once.
 Or create a bounded heartbeat:
 
 ```text
-Every 30 minutes for the next 4 hours, use $remote-codex-control to check the mobile command inbox once. If there is a pending command, execute it in this current Codex App thread, respond normally on the desktop, and write a concise phone-visible result note.
+Every 15 minutes for the next 4 hours, use $remote-codex-control to check the mobile command inbox once. If there is a pending command, execute it in this current Codex App thread, respond normally on the desktop, and write a concise phone-visible result note.
 ```
 
 This is the recommended workflow because it keeps the active Codex App thread in control.
@@ -152,8 +154,8 @@ Heartbeat checks consume usage even when the inbox is empty. In one ChatGPT Plus
 Recommended presets:
 
 - Every 60 minutes: lowest cost.
-- Every 30 minutes: balanced default.
-- Every 15 minutes: responsive, moderate cost.
+- Every 30 minutes: lower cost.
+- Every 15 minutes: recommended default, responsive with moderate cost.
 - Every 5 or 10 minutes: short urgent windows only.
 
 Prefer bounded sessions, such as "for the next 4 hours".
