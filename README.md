@@ -4,7 +4,7 @@
 
 Remote Codex Control is a Codex skill that lets you send instructions from a phone to a desktop Codex App session, then view concise execution results on the phone.
 
-The main use case is leaving your computer while a Codex engineering session is still running. Your phone sends commands into a local desktop inbox; the current Codex App thread checks that inbox manually or through a bounded heartbeat, executes the work in the active project context, and writes a phone-visible result note.
+The main use case is leaving your computer while a Codex engineering session is still running. Your phone sends commands into a local desktop inbox; the current Codex App thread checks that inbox manually or through a bounded heartbeat, executes the work in the active project context, responds normally on the desktop, and writes a short phone-visible result note.
 
 ## What It Does
 
@@ -24,10 +24,12 @@ Phone browser
   -> desktop bridge server
   -> inbox.jsonl
   -> current Codex App thread via manual check or heartbeat
+  -> normal desktop Codex response
   -> phone-visible result note
 ```
 
 The recommended mode is current-thread control. This preserves the active Codex App conversation, recent engineering decisions, and workspace context.
+The phone-visible note is only a short receipt; it should not replace the normal desktop Codex answer.
 
 ## Requirements
 
@@ -101,10 +103,22 @@ Use $remote-codex-control to check the mobile command inbox once.
 Or create a bounded heartbeat:
 
 ```text
-Every 30 minutes for the next 4 hours, use $remote-codex-control to check the mobile command inbox once. If there is a pending command, execute it in this current Codex App thread and write a concise phone-visible result note.
+Every 30 minutes for the next 4 hours, use $remote-codex-control to check the mobile command inbox once. If there is a pending command, execute it in this current Codex App thread, respond normally on the desktop, and write a concise phone-visible result note.
 ```
 
 This is the recommended workflow because it keeps the active Codex App thread in control.
+
+## Desktop Output vs Phone Summary
+
+When Codex handles a phone-submitted command in the current thread, the desktop Codex App should still show the normal response: the real answer, plan, implementation summary, findings, or result. The phone page should show only a compact status note.
+
+For example, if the phone command asks for a project review, the desktop response should contain the actual review. The phone note can simply say:
+
+```text
+Done. I reviewed the project and listed the main optimization priorities in the desktop Codex thread.
+```
+
+Avoid making the desktop response only say "processed and wrote back to phone"; that message is useful on the phone, but not enough for the desktop thread.
 
 ## Manual Inbox Commands
 

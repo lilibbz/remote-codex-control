@@ -15,7 +15,7 @@ Treat this as an inbox-and-workflow bridge for remote-controlling the current de
 2. Pair the phone with the printed token URL.
 3. Use manual checks or a bounded heartbeat so the current Codex App thread reads the phone inbox.
 4. Execute each submitted command inside the current project/thread context.
-5. Mark commands `done` or `skipped` with a phone-visible result note.
+5. Respond normally in the desktop Codex thread, then mark commands `done` or `skipped` with a separate phone-visible result note.
 
 If the user needs fully interactive screen control, recommend a remote desktop tool separately. Keep this skill focused on sending task instructions to Codex.
 
@@ -50,7 +50,7 @@ Prefer manual checks or heartbeat checks when the user's goal is to remotely con
 Use heartbeat checks for remote work sessions:
 
 ```text
-Every 30 minutes for the next 4 hours, use $remote-codex-control to check the mobile command inbox once. If there is a pending command, execute it in this current Codex App thread and mark it done or skipped with a concise phone-visible result note.
+Every 30 minutes for the next 4 hours, use $remote-codex-control to check the mobile command inbox once. If there is a pending command, execute it in this current Codex App thread, respond normally in the desktop thread, and mark it done or skipped with a concise phone-visible result note.
 ```
 
 Use manual checks when the user is at the desktop or wants one explicit check:
@@ -122,7 +122,27 @@ When `next --mark-seen` returns a command, treat its `body` exactly like the use
 
 ## Phone-Visible Results
 
-The phone page shows recent commands, their status, and the latest status note. Always write a concise user-facing result note when marking a command `done` or `skipped`.
+The phone page shows recent commands, their status, and the latest status note. The phone-visible note is only a short receipt; it must not replace the normal desktop Codex response.
+
+## Desktop Output Contract
+
+When processing a phone-submitted command in the current Codex App thread, always produce the normal desktop response that the user would expect if they had typed the command directly into Codex. The desktop response should contain the real answer, plan, implementation summary, findings, or result.
+
+After the desktop response is prepared, write a separate concise phone-visible result note with `read_inbox.py done ... --note "..."` or `read_inbox.py skipped ... --note "..."`.
+
+Do not make the desktop response only say:
+
+- "A mobile command was processed."
+- "I wrote the result back to the phone page."
+- "There was a phone command and it is done."
+
+Those are acceptable phone notes, but they are not acceptable desktop responses.
+
+For heartbeat-triggered checks, if a pending phone command is processed, include a substantive desktop-visible summary before the heartbeat XML notification, then use the XML `<message>` only as a short notification status.
+
+## Phone Result Note Style
+
+Always write a concise user-facing result note when marking a command `done` or `skipped`.
 
 Good result notes include:
 
@@ -138,7 +158,7 @@ Keep notes short enough to read on a phone. Do not paste large logs or full file
 When the user wants remote control of the current engineering session while away, create a heartbeat automation attached to the current thread. Use a short, self-contained prompt such as:
 
 ```text
-Use $remote-codex-control to check the mobile command inbox once. If there is a pending command, summarize it, execute it in this current Codex App thread if it is safe and clear, then mark it done or skipped with a concise phone-visible result note. If there is no pending command, say so briefly.
+Use $remote-codex-control to check the mobile command inbox once. If there is a pending command, treat it as the user's latest instruction: summarize it, execute it in this current Codex App thread if it is safe and clear, and produce the normal desktop Codex response. Then mark it done or skipped with a concise phone-visible result note. If there is no pending command, say so briefly.
 ```
 
 ## Check Frequency And Token Cost
@@ -166,7 +186,7 @@ Useful presets:
 Example automation request:
 
 ```text
-Every 30 minutes for the next 4 hours, use $remote-codex-control to check the mobile command inbox once. If there is a pending command, summarize it, execute it in this current Codex App thread if it is safe and clear, then mark it done or skipped with a concise phone-visible result note. If there is no pending command, say so briefly.
+Every 30 minutes for the next 4 hours, use $remote-codex-control to check the mobile command inbox once. If there is a pending command, treat it as the user's latest instruction, execute it in this current Codex App thread if it is safe and clear, produce the normal desktop Codex response, then mark it done or skipped with a concise phone-visible result note. If there is no pending command, say so briefly.
 ```
 
 Do not create a public long-running tunnel without the user's explicit approval.
