@@ -1,5 +1,7 @@
 # Remote Codex Control
 
+[中文说明](README.zh-CN.md) | English
+
 Remote Codex Control is a Codex skill that lets you send instructions from a phone to a desktop Codex App session, then view concise execution results on the phone.
 
 The main use case is leaving your computer while a Codex engineering session is still running. Your phone sends commands into a local desktop inbox; the current Codex App thread checks that inbox manually or through a bounded heartbeat, executes the work in the active project context, and writes a phone-visible result note.
@@ -42,7 +44,7 @@ Clone or download this repository into your Codex skills directory:
 
 ```powershell
 cd $HOME\.codex\skills
-git clone https://github.com/YOUR_NAME/remote-codex-control.git
+git clone https://github.com/lilibbz/remote-codex-control.git
 ```
 
 Restart or refresh Codex App so the skill is discoverable as:
