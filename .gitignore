@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Local bridge state
+config.json
+inbox.jsonl
+.codex-state/
+remote-codex-control/
+
+# Environment and editor files
+.env
+.venv/
+venv/
+.idea/
+.vscode/
+
+# OS files
+Thumbs.db
+.DS_Store

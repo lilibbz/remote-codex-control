@@ -1,0 +1,4 @@
+interface:
+  display_name: "Remote Codex Control"
+  short_description: "Phone control for the current Codex thread."
+  default_prompt: "Use $remote-codex-control to start a phone inbox and let this current Codex thread handle remote instructions."
